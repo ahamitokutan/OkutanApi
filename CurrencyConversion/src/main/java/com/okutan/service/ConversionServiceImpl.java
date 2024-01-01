@@ -8,7 +8,6 @@ import com.okutan.repository.CurrencyConversionTransactionRepository;
 import com.okutan.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +43,14 @@ public class ConversionServiceImpl implements com.okutan.service.ConversionServi
         if(exchangeRateResponse.getStatusCode().equals(HttpStatus.OK)) {
             Double targetAmount, conversionRate;
             ExchangeRateResponse body = exchangeRateResponse.getBody();
-            if(body.getData().containsKey(targetCurrency)){
+
+            if(body != null && body.getData() != null && body.getData().containsKey(targetCurrency)){
                 conversionRate = Double.valueOf(body.getData().get(targetCurrency));
                 targetAmount = sourceAmount*conversionRate;
+            }
+            else if(body != null && body.getErrorMessage() != null){
+                response.setErrorMessage("error calling exchangeRate service : " + body.getErrorMessage());
+                return response;
             }
             else{
                 response.setErrorMessage("target currency " + targetCurrency + " not found in ExchangeRate service");
@@ -65,7 +69,7 @@ public class ConversionServiceImpl implements com.okutan.service.ConversionServi
             response.setTransactionId(currencyConversionTransaction.getTransactionId());
         }
         else{
-            response.setErrorMessage("Error calling ExchangeRate Api");
+            response.setErrorMessage("Error calling ExchangeRate Api" + exchangeRateResponse.getBody().getErrorMessage());
         }
         return response;
     }

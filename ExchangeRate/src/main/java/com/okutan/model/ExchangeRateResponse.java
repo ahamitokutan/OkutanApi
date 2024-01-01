@@ -1,21 +1,19 @@
 package com.okutan.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-public class ExchangeRateResponse {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ExchangeRateResponse extends BaseResponse{
 
     @JsonProperty("data")
     private Map<String, String> data;
-
-    public Map<String, String> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, String> data) {
-        this.data = data;
-    }
 
     @Override
     public String toString() {
