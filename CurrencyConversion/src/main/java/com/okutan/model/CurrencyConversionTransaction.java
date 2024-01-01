@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "build")
 public class CurrencyConversionTransaction {
 
     @Id
